@@ -2,7 +2,15 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\BatchController;
+
+
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
+
+Route::post('/products', [ProductController::class, 'registerProduct']);
+
+Route::post('/register-batch-reception', [BatchController::class, 'registerBatchReception']);
