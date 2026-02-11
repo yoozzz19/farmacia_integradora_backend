@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Resources\ProductResource;
+use App\Http\Requests\UpdateReceptionRequest;
+use Illuminate\Support\Facades\Storage;
 
 
 class ProductController extends Controller
@@ -67,6 +69,60 @@ class ProductController extends Controller
             DB::rollBack();
             Log::error("Error General (Registro): " . $e->getMessage());
             return $this->response(false, 'Error al registrar producto: ' . $e->getMessage(), null, null, 500);
+        }
+    }
+
+    
+    /**
+     * CU-03: Editar Producto (Update)
+     */
+    public function update(UpdateReceptionRequest $request, $id)
+    {
+        $product = Product::find($id);
+
+        if (!$product) {
+            return response()->json(['message' => 'Producto no encontrado'], 404);
+        }
+
+        // 1. Validación
+        $data = $request->validated();
+
+        try {
+            DB::beginTransaction();
+
+            // 2. Manejo de Imagen en Edición
+            if ($request->hasFile('image')) {
+                // Borrar imagen anterior si existe
+                if ($product->image) {
+                    Storage::disk('public')->delete($product->image);
+                }
+                $imagePath = $request->file('image')->store('product_images', 'public');
+                $data['image'] = $imagePath;
+            }
+
+            // 3. Guardar cambios
+            $product->update($data);
+
+            // 4. Auditoría
+            try {
+                Audit::create([
+                    'user_id' => Auth::id(),
+                    'affected_module' => 'Productos',
+                    'action_performed' => 'Edición',
+                    'detail' => "Se actualizó la información del producto ID {$product->id}: {$product->name}",
+                    'date_time' => now()
+                ]);
+            } catch (\Exception $e) {
+                Log::error("Error de Auditoría (Edición): " . $e->getMessage());
+            }
+
+            DB::commit();
+            return $this->response(true, 'Producto actualizado correctamente', new ProductResource($product), null, 200);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("Error General (Edición): " . $e->getMessage());
+            return $this->response(false, 'Error al actualizar producto: ' , null, $e->getMessage(), 500);
         }
     }
 }

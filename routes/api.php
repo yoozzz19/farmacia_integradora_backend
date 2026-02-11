@@ -12,5 +12,6 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::post('/products', [ProductController::class, 'registerProduct']);
+Route::patch('/products/{id}', [ProductController::class, 'update']);
 
 Route::post('/register-batch-reception', [BatchController::class, 'registerBatchReception']);

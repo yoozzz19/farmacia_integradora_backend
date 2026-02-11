@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateReceptionRequest extends FormRequest
 {
@@ -21,21 +22,28 @@ class UpdateReceptionRequest extends FormRequest
      */
     public function rules(): array
     {
-        $productId = $this->route('product')->id;
+        $code = $this->codigo;
 
         return [
-            'codigo' => 'sometimes|required|string|max:255|unique:products,codigo,' . $productId,
-            'name' => 'sometimes|required|string|max:255',
-            'presentation' => 'nullable|string|max:255',
-            'purchase_price' => 'sometimes|required|numeric|min:0',
-            'sale_price' => 'sometimes|required|numeric|min:0|gte:purchase_price',
-            'location' => 'nullable|string|max:255',
-            'min_stock' => 'sometimes|required|integer|min:0|lte:max_stock', 
-            'max_stock' => 'nullable|integer|min:0|gte:min_stock',
-            'description' => 'nullable|string',
-            'image' => 'nullable|image|max:5120',
-            'supplier_id' => 'nullable|exists:suppliers,id',
-            'category_id' => 'nullable|exists:categories,id',
+            'name' => ['sometimes','required','string','max:255'],
+
+            'codigo' => [
+                'sometimes','required','string','max:50',
+                    Rule::unique('products','codigo')->ignore($code,'codigo'),
+                ],
+
+            'purchase_price' => ['sometimes','required','numeric','min:0'],
+            'sale_price'     => ['sometimes','required','numeric','min:0'],
+
+            'category_id' => ['sometimes','required','exists:categories,id'],
+            'supplier_id' => ['sometimes','required','exists:suppliers,id'],
+
+            'min_stock' => ['sometimes','required','integer','min:0'],
+            'max_stock' => ['sometimes','required','integer','gte:min_stock'],
+
+            'location' => ['sometimes','nullable','string','max:100'],
+            'description' => ['sometimes','nullable','string'],
+            'image' => ['sometimes','nullable','image','max:2048'],
         ];
     }
 }
