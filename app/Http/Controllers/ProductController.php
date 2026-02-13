@@ -23,14 +23,13 @@ class ProductController extends Controller
 
     /**
      * CU-01: Registrar Producto (Crear)
-     */
+     */                             // 1. Validación
     public function registerProduct(ProductRequest $request)
     {
         $categories = Category::all();
         $suppliers = Supplier::all();
 
-        // 1. Validación de datos 
-        $data = $request->validated();
+        
 
         try {
             DB::beginTransaction();
@@ -38,13 +37,13 @@ class ProductController extends Controller
             // 2. Manejo de Imagen (Lógica HEAD)
             if ($request->hasFile('image')) {
                 $imagePath = $request->file('image')->store('product_images', 'public');
-                $data['image'] = $imagePath;
+                $request['image'] = $imagePath;
             } else {
-                $data['image'] = null;
+                $request['image'] = null;
             }
             
             // 3. Crear producto
-            $product = Product::create($data);
+            $product = Product::create($request->all());
 
             // 4. Auditoría
             try {
@@ -75,7 +74,7 @@ class ProductController extends Controller
     
     /**
      * CU-03: Editar Producto (Update)
-     */
+     */                    // 1. Validación
     public function update(UpdateReceptionRequest $request, $id)
     {
         $product = Product::find($id);
@@ -84,8 +83,6 @@ class ProductController extends Controller
             return response()->json(['message' => 'Producto no encontrado'], 404);
         }
 
-        // 1. Validación
-        $data = $request->validated();
 
         try {
             DB::beginTransaction();
@@ -97,11 +94,11 @@ class ProductController extends Controller
                     Storage::disk('public')->delete($product->image);
                 }
                 $imagePath = $request->file('image')->store('product_images', 'public');
-                $data['image'] = $imagePath;
+                $request['image'] = $imagePath;
             }
 
             // 3. Guardar cambios
-            $product->update($data);
+            $product->update($request->all());
 
             // 4. Auditoría
             try {

@@ -16,35 +16,34 @@ class BatchController extends Controller
     use ApiResponse;
     /**
      * CU-02: Registrar Recepción de Lote
-     */
+     */                                     // 1. Validación        
     public function registerBatchReception(ReceptionRequest $request)
     {
-        // Validación de datos
-        $data = $request->validated();
+        
 
         try {
             DB::beginTransaction();
 
-            $totalUnits = collect($data['products'])->sum('amount');
+            $totalUnits = collect($request['products'])->sum('amount');
 
             // Calcular total monetario
-            $totalMoney = collect($data['products'])->sum(function ($item) {
+            $totalMoney = collect($request['products'])->sum(function ($item) {
                 return $item['amount'] * $item['unit_price'];
             });
 
             // 1. Crear el Lote (Cabecera)
             $batch = Batch::create([
-                'identifier_batch' => $data['identifier_batch'],
-                'supplier_id' => $data['supplier_id'] ?? null,
-                'entry_date' => $data['entry_date'] ?? null,
-                'notes' => $data['notes'] ?? null,
-                'products_count' => count($data['products']),
+                'identifier_batch' => $request['identifier_batch'],
+                'supplier_id' => $request['supplier_id'] ?? null,
+                'entry_date' => $request['entry_date'] ?? null,
+                'notes' => $request['notes'] ?? null,
+                'products_count' => count($request['products']),
                 'units_count' => $totalUnits,
                 'total' => $totalMoney,
             ]);
 
             // 2. Registrar cada producto del lote
-            foreach ($data['products'] as $productData) {
+            foreach ($request['products'] as $productData) {
                 // Registrar recepción
                 ProductReception::create([
                     'product_id' => $productData['product_id'],
@@ -67,7 +66,7 @@ class BatchController extends Controller
                 $this->response(true, 'Batch reception registered successfully', new ReceptionResource($batch),null, 201);
         } catch (\Exception $e) {
             DB::rollBack();
-            return $this->response(false, 'Error registering batch: ',null, $e->getMessage(), 500);
+            return $this->response(false, 'Error registering batch ',null, $e->getMessage(), 500);
         }
     }
 
