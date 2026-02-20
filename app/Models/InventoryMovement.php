@@ -6,5 +6,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class InventoryMovement extends Model
 {
-    //
+    protected $fillable = [
+        'product_id',
+        'reason',
+        'amount',
+        'date_time',
+        'user_id'
+    ];
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

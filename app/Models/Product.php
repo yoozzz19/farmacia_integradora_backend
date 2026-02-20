@@ -6,6 +6,22 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
+    protected $fillable = [
+        'codigo',
+        'name',
+        'presentation',
+        'purchase_price',
+        'sale_price',
+        'stock',
+        'location',
+        'min_stock',
+        'max_stock',
+        'description',
+        'image',
+        'category_id',
+        'supplier_id'
+    ];
+
     public function saleDetails()
     {
         return $this->hasMany(SaleDetail::class);
@@ -26,5 +42,27 @@ class Product extends Model
     public function reservedProduct()
     {
         return $this->reservations()->where('state', 'pending')->exists();
+    }
+
+
+
+    public function inventorieMovements()
+    {
+        return $this->hasMany(InventoryMovement::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(categories::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function productReceptions()
+    {
+        return $this->hasMany(ProductReception::class);
     }
 }
