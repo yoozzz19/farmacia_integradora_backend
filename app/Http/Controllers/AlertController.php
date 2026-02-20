@@ -14,20 +14,24 @@ class AlertController extends Controller
     public function lowStock(){
         $stock = Product::whereColumn('stock', '<=', 'min_stock')->get();
 
-        return $this->response(true, 'Se han mostrado los datos', $stock, null, 201);
+        return $this->response(true, 'Productos con stock bajo', $stock, null, 201);
     }
 
     //productos próximos a vencer
     public function expireSoon()
     {
-        $stock = Product::where()->get();
-        return $this->response(true, 'Se han mostrado los datos', $stock, null, 201);
+        $product = Product::whereHas('productReceptions', function($q){
+            $q->where('expiration_date', [now(), now()->addDays(7)]);
+        })->get();
+        return $this->response(true, 'Productos que están porcaducar', $product, null, 201);
     }
 
     //productos caducados
     public function expired()
     {
-        $stock = Product::where()->get();
-        return $this->response(true, 'Se han mostrado los datos', $stock, null, 201);
+        $product = Product::whereHas('productReceptions', function($q){
+            $q->whereBetween('expiration_date', '<' ,now());
+        })->get();
+        return $this->response(true, 'Productos caducados', $product, null, 201);
     }
 }
