@@ -12,6 +12,7 @@ use App\Traits\ApiResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use App\Http\Resources\TicketResource;
 
 class SaleController extends Controller
 {
@@ -86,6 +87,16 @@ class SaleController extends Controller
 
         } catch (\Exception $e) {
             return $this->response(false, 'Error al procesar la venta: ' . $e->getMessage(), null, null, 400);
+        }
+    }
+
+    public function getTicket($id) {
+        try {
+            $sale = Sale::with(['customer', 'paymentMethod', 'details.product'])->findOrFail($id);
+
+            return $this->response(true, 'Ticket obtenido exitosamente', new TicketResource($sale));
+        } catch (\Exception $e) {
+            return $this->response(false, 'Error al obtener el ticket: ' . $e->getMessage(), null, null, 400);
         }
     }
 }
