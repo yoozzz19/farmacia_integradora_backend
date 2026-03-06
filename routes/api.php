@@ -9,6 +9,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\BatchController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PickUpController;
 use App\Http\Controllers\UserController;
 
 // --- Rutas Públicas ---
@@ -47,6 +48,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
+
+    //Crear pedido pick-up
+    Route::post('/create/pick-up/order', [PickUpController::class, 'store']);
 });
 
 Route::post('/products', [ProductController::class, 'registerProduct']);
