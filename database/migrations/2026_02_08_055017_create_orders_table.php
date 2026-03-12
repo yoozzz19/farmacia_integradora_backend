@@ -23,6 +23,7 @@ return new class extends Migration
                 'completed',
                 'canceled'
             ])->default('pending');
+            $table->unsignedBigInteger('payment_method_id')->nullable();
             $table->foreignId('employee_id')->nullable()->constrained('users', 'id', 'fk_orders_employee')->nullOnDelete();
 
             $table->softDeletes();

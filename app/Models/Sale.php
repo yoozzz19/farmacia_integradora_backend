@@ -10,7 +10,7 @@ class Sale extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'data_time',
+        'date_time',
         'state',
         'total',
         'subtotal',

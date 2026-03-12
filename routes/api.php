@@ -42,6 +42,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/users/{id}', [UserController::class, 'destroy']);
     Route::post('/users/{id}/restore', [UserController::class, 'restore']);
     Route::post('/register/staff', [AuthController::class, 'registerStaff']);
+    Route::post('/sales', [SaleController::class, 'store']);
+    Route::get('/sales/{id}/ticket', [SaleController::class, 'getTicket']);
 
     // Ejemplo: Obtener el usuario autenticado
     Route::get('/user', function (Request $request) {
@@ -55,5 +57,4 @@ Route::patch('/products/{id}', [ProductController::class, 'update']);
 Route::post('/register-batch-reception', [BatchController::class, 'registerBatchReception']);
 
 Route::get('/products/search', [ProductController::class, 'search']);
-Route::post('/sales', [SaleController::class, 'store']);
-Route::get('/sales/{id}/ticket', [SaleController::class, 'getTicket']);
+

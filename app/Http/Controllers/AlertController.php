@@ -23,7 +23,7 @@ class AlertController extends Controller
         $product = Product::whereHas('productReceptions', function($q){
             $q->where('expiration_date', [now(), now()->addDays(7)]);
         })->get();
-        return $this->response(true, 'Productos que están porcaducar', $product, null, 201);
+        return $this->response(true, 'Productos que están por caducar', $product, null, 201);
     }
 
     //productos caducados
