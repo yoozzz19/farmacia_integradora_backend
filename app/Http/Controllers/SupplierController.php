@@ -2,20 +2,6 @@
 
 namespace App\Http\Controllers;
 
-<<<<<<< HEAD
-use Illuminate\Http\Request;
-use App\Models\Supplier;
-use App\Traits\ApiResponse;
-
-class SupplierController extends Controller
-{
-    use ApiResponse;
-    public function index()
-    {
-        // Lógica para listar proveedores
-        $suppliers = Supplier::all();
-        return $this->response(true, 'Suppliers retrieved successfully', $suppliers);
-=======
 use App\Http\Requests\Supplier\StoreSupplierRequest;
 use App\Http\Requests\Supplier\UpdateSupplierRequest;
 use App\Models\Supplier;
@@ -107,6 +93,5 @@ class SupplierController extends Controller
         $supplier->restore();
 
         return response()->json(['message' => 'Proveedor restaurado correctamente', 'supplier' => $supplier]);
->>>>>>> LOGIN_ANIBAL
     }
 }
