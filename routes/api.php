@@ -10,6 +10,7 @@ use App\Http\Controllers\BatchController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SupplierController;
 
 // --- Rutas Públicas ---
 
@@ -57,4 +58,4 @@ Route::patch('/products/{id}', [ProductController::class, 'update']);
 Route::post('/register-batch-reception', [BatchController::class, 'registerBatchReception']);
 
 Route::get('/products/search', [ProductController::class, 'search']);
-
+Route::get('/suppliers', [SupplierController::class, 'index']);
