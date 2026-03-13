@@ -11,6 +11,7 @@ use App\Http\Controllers\SaleController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\CategoryController;
 
 // --- Rutas Públicas ---
 
@@ -59,3 +60,4 @@ Route::post('/register-batch-reception', [BatchController::class, 'registerBatch
 
 Route::get('/products/search', [ProductController::class, 'search']);
 Route::get('/suppliers', [SupplierController::class, 'index']);
+Route::apiResource('categories', CategoryController::class);
