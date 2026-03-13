@@ -1,5 +1,6 @@
 <?php
 
+<<<<<<< HEAD
 use App\Http\Controllers\AlertController;
 use App\Http\Controllers\InventoryAdjustmentController;
 use App\Http\Controllers\ProductsController;
@@ -12,8 +13,15 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\CategoryController;
+=======
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\UserController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+>>>>>>> LOGIN_ANIBAL
 
-// --- Rutas Públicas ---
+// --- Rutas Publicas ---
 
 // Staff
 Route::post('/login/staff', [AuthController::class, 'loginStaff']);
@@ -32,12 +40,10 @@ Route::get('/user', function (Request $request) {
 Route::post('/register/customer', [AuthController::class, 'registerCustomer']);
 Route::post('/login/customer', [AuthController::class, 'loginCustomer']);
 
-
 // --- Rutas Protegidas (Requieren Token) ---
 
 Route::middleware('auth:sanctum')->group(function () {
-
-    // Gestión de Usuarios (Solo Admin)
+    // Gestion de Usuarios (Solo Admin)
     Route::get('/users', [UserController::class, 'index']);
     Route::get('/users/{id}', [UserController::class, 'show']);
     Route::put('/users/{id}', [UserController::class, 'update']);
@@ -47,12 +53,21 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/sales', [SaleController::class, 'store']);
     Route::get('/sales/{id}/ticket', [SaleController::class, 'getTicket']);
 
+    // Gestion de Proveedores (CU-24)
+    Route::get('/suppliers', [SupplierController::class, 'index']);
+    Route::get('/suppliers/{id}', [SupplierController::class, 'show']);
+    Route::post('/suppliers', [SupplierController::class, 'store']);
+    Route::put('/suppliers/{id}', [SupplierController::class, 'update']);
+    Route::delete('/suppliers/{id}', [SupplierController::class, 'destroy']);
+    Route::post('/suppliers/{id}/restore', [SupplierController::class, 'restore']);
+
     // Ejemplo: Obtener el usuario autenticado
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
 });
 
+<<<<<<< HEAD
 Route::post('/products', [ProductController::class, 'registerProduct']);
 Route::patch('/products/{id}', [ProductController::class, 'update']);
 
@@ -61,3 +76,5 @@ Route::post('/register-batch-reception', [BatchController::class, 'registerBatch
 Route::get('/products/search', [ProductController::class, 'search']);
 Route::get('/suppliers', [SupplierController::class, 'index']);
 Route::apiResource('categories', CategoryController::class);
+=======
+>>>>>>> LOGIN_ANIBAL
